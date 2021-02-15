@@ -133,6 +133,10 @@ function upload(selector) {
     input.multiple = true; // input.setAttribute('multiple', true)
   }
 
+  if (options.accept && Array.isArray(options.accept)) {
+    input.setAttribute('accept', options.accept.join(', '));
+  }
+
   var openButton = document.createElement('button');
   openButton.classList.add('btn');
   openButton.textContent = 'Open';
@@ -143,7 +147,13 @@ function upload(selector) {
   };
 
   var changeHandler = function changeHandler(event) {
-    console.log(event.target.files);
+    if (!event.target.files) {
+      return;
+    }
+
+    var files = event.target.files;
+    console.log(Array.isArray(files));
+    console.log(files);
   };
 
   openButton.addEventListener('click', triggerInput);
@@ -155,7 +165,8 @@ function upload(selector) {
 var _upload = require("./upload.js");
 
 (0, _upload.upload)('#loadFile', {
-  multi: true
+  multi: true,
+  accept: ['.png', '.jpg', '.jpeg', '.gif']
 });
 },{"./upload.js":"upload.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
