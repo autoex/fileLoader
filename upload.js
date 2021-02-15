@@ -29,7 +29,14 @@ export function upload(selector, options = {}) {
 
         const files = Array.from(event.target.files);
         console.log(Array.isArray(files));
-        console.log(files);
+
+        files.forEach(file => {
+
+            if(!file.type.match('image')) return;
+
+
+            console.log(file);}
+            )
     }
 
     openButton.addEventListener('click', triggerInput);
