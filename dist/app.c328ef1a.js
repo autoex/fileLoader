@@ -151,7 +151,7 @@ function upload(selector) {
       return;
     }
 
-    var files = event.target.files;
+    var files = Array.from(event.target.files);
     console.log(Array.isArray(files));
     console.log(files);
   };

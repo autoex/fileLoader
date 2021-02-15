@@ -27,7 +27,7 @@ export function upload(selector, options = {}) {
             return
         }
 
-        const {files} = event.target;
+        const files = Array.from(event.target.files);
         console.log(Array.isArray(files));
         console.log(files);
     }
