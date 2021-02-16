@@ -125,6 +125,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.upload = upload;
 
+function bytesToSize(bytes) {
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  if (!bytes) return '0 Byte';
+  var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+  return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
+
 function upload(selector) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var input = document.querySelector(selector);
@@ -163,9 +170,9 @@ function upload(selector) {
       var reader = new FileReader();
 
       reader.onload = function (ev) {
-        console.log(ev.target.result); // previewBox.innerHTML += `<img src="${ev.target.result}" />`;
+        console.log(ev); // previewBox.innerHTML += `<img src="${ev.target.result}" />`;
 
-        previewBox.insertAdjacentHTML('afterbegin', "\n<div class=\"preview-img\">\n<img src=\"".concat(ev.target.result, "\" />\n</div>")); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
+        previewBox.insertAdjacentHTML('afterbegin', "\n<div class=\"preview-img\">\n<div class=\"preview-remove\">&times;</div>\n<img src=\"".concat(ev.target.result, "\" />\n<div class=\"preview-info\"><span>Size:</span> ").concat(bytesToSize(file.size), "</div>\n</div>")); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
       };
 
       reader.readAsDataURL(file);

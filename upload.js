@@ -1,3 +1,14 @@
+function bytesToSize(bytes) {
+    let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (!bytes) return '0 Byte';
+    let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
+
+
+
+
+
 export function upload(selector, options = {}) {
 
 
@@ -29,7 +40,7 @@ export function upload(selector, options = {}) {
             return
         }
         openButton.insertAdjacentElement('afterend', previewBox);
-        previewBox.innerHTML ='';
+        previewBox.innerHTML = '';
         const files = Array.from(event.target.files);
         console.log(Array.isArray(files));
 
@@ -44,11 +55,13 @@ export function upload(selector, options = {}) {
                 const reader = new FileReader();
 
                 reader.onload = ev => {
-                    console.log(ev.target.result);
+                    console.log(ev);
                     // previewBox.innerHTML += `<img src="${ev.target.result}" />`;
                     previewBox.insertAdjacentHTML('afterbegin', `
 <div class="preview-img">
+<div class="preview-remove">&times;</div>
 <img src="${ev.target.result}" />
+<div class="preview-info"><span>Size:</span> ${bytesToSize(file.size)}</div>
 </div>`)
                     // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
                 };
