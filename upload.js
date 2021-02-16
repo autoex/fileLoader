@@ -28,7 +28,8 @@ export function upload(selector, options = {}) {
         if (!event.target.files) {
             return
         }
-        openButton.insertAdjacentElement('afterend', previewBox)
+        openButton.insertAdjacentElement('afterend', previewBox);
+        previewBox.innerHTML ='';
         const files = Array.from(event.target.files);
         console.log(Array.isArray(files));
 
@@ -44,7 +45,11 @@ export function upload(selector, options = {}) {
 
                 reader.onload = ev => {
                     console.log(ev.target.result);
-                    previewBox.innerHTML += `<img src="${ev.target.result}" />`;
+                    // previewBox.innerHTML += `<img src="${ev.target.result}" />`;
+                    previewBox.insertAdjacentHTML('afterbegin', `
+<div class="preview-img">
+<img src="${ev.target.result}" />
+</div>`)
                     // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
                 };
 

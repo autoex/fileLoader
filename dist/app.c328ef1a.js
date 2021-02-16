@@ -154,6 +154,7 @@ function upload(selector) {
     }
 
     openButton.insertAdjacentElement('afterend', previewBox);
+    previewBox.innerHTML = '';
     var files = Array.from(event.target.files);
     console.log(Array.isArray(files));
     files.forEach(function (file) {
@@ -162,8 +163,9 @@ function upload(selector) {
       var reader = new FileReader();
 
       reader.onload = function (ev) {
-        console.log(ev.target.result);
-        previewBox.innerHTML += "<img src=\"".concat(ev.target.result, "\" />"); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
+        console.log(ev.target.result); // previewBox.innerHTML += `<img src="${ev.target.result}" />`;
+
+        previewBox.insertAdjacentHTML('afterbegin', "\n<div class=\"preview-img\">\n<img src=\"".concat(ev.target.result, "\" />\n</div>")); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
       };
 
       reader.readAsDataURL(file);
