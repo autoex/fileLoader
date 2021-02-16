@@ -2,6 +2,8 @@ export function upload(selector, options = {}) {
 
 
     const input = document.querySelector(selector);
+    const previewBox = document.createElement('div');
+    previewBox.classList.add('previewBox');
 
     if (options.multi) {
         input.multiple = true;
@@ -10,7 +12,7 @@ export function upload(selector, options = {}) {
 
     if (options.accept && Array.isArray(options.accept)) {
 
-        input.setAttribute('accept', options.accept.join(', ') )
+        input.setAttribute('accept', options.accept.join(', '))
 
     }
 
@@ -23,20 +25,33 @@ export function upload(selector, options = {}) {
     const triggerInput = () => input.click();
     const changeHandler = event => {
 
-        if(!event.target.files) {
+        if (!event.target.files) {
             return
         }
-
+        openButton.insertAdjacentElement('afterend', previewBox)
         const files = Array.from(event.target.files);
         console.log(Array.isArray(files));
 
         files.forEach(file => {
 
-            if(!file.type.match('image')) return;
+                if (!file.type.match('image')) return;
 
 
-            console.log(file);}
-            )
+                // console.log(file);
+
+
+                const reader = new FileReader();
+
+                reader.onload = ev => {
+                    console.log(ev.target.result);
+                    previewBox.innerHTML += `<img src="${ev.target.result}" />`;
+                    // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
+                };
+
+
+                reader.readAsDataURL(file);
+            }
+        )
     }
 
     openButton.addEventListener('click', triggerInput);

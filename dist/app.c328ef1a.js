@@ -128,6 +128,8 @@ exports.upload = upload;
 function upload(selector) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var input = document.querySelector(selector);
+  var previewBox = document.createElement('div');
+  previewBox.classList.add('previewBox');
 
   if (options.multi) {
     input.multiple = true; // input.setAttribute('multiple', true)
@@ -151,11 +153,20 @@ function upload(selector) {
       return;
     }
 
+    openButton.insertAdjacentElement('afterend', previewBox);
     var files = Array.from(event.target.files);
     console.log(Array.isArray(files));
     files.forEach(function (file) {
-      if (!file.type.match('image')) return;
-      console.log(file);
+      if (!file.type.match('image')) return; // console.log(file);
+
+      var reader = new FileReader();
+
+      reader.onload = function (ev) {
+        console.log(ev.target.result);
+        previewBox.innerHTML += "<img src=\"".concat(ev.target.result, "\" />"); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
+      };
+
+      reader.readAsDataURL(file);
     });
   };
 
