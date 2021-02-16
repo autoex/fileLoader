@@ -6,11 +6,8 @@ function bytesToSize(bytes) {
 }
 
 
-
-
-
 export function upload(selector, options = {}) {
-
+    let files = [];
 
     const input = document.querySelector(selector);
     const previewBox = document.createElement('div');
@@ -41,7 +38,7 @@ export function upload(selector, options = {}) {
         }
         openButton.insertAdjacentElement('afterend', previewBox);
         previewBox.innerHTML = '';
-        const files = Array.from(event.target.files);
+        files = Array.from(event.target.files);
         console.log(Array.isArray(files));
 
         files.forEach(file => {
@@ -58,11 +55,11 @@ export function upload(selector, options = {}) {
                     console.log(ev);
                     // previewBox.innerHTML += `<img src="${ev.target.result}" />`;
                     previewBox.insertAdjacentHTML('afterbegin', `
-<div class="preview-img">
-<div class="preview-remove">&times;</div>
-<img src="${ev.target.result}" />
-<div class="preview-info"><span>Size:</span> ${bytesToSize(file.size)}</div>
-</div>`)
+                            <div class="preview-img">
+                            <div class="preview-remove" data-name="${file.name}">&times;</div>
+                            <img src="${ev.target.result}" />
+                            <div class="preview-info"><span>Size:</span> ${bytesToSize(file.size)}</div>
+                            </div>`)
                     // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
                 };
 
@@ -70,11 +67,36 @@ export function upload(selector, options = {}) {
                 reader.readAsDataURL(file);
             }
         )
+    };
+
+    let removeHandler = event => {
+        if (!event.target.dataset.name) return;
+
+        const {name} = event.target.dataset;
+        files = files.filter(file => file.name !== name);
+
+
+
+        let block = document.querySelector(`[data-name="${name}"]`).closest('.preview-img');
+
+        block.classList.add('preview-removing');
+        setTimeout(()=>block.remove(), 300)
+
+
+        console.log(block)
+
+
+
+
+        console.log(name);
+        console.log(files);
     }
 
     openButton.addEventListener('click', triggerInput);
 
     input.addEventListener('change', changeHandler);
+
+    previewBox.addEventListener('click', removeHandler)
 
 
 }

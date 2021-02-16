@@ -134,6 +134,7 @@ function bytesToSize(bytes) {
 
 function upload(selector) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var files = [];
   var input = document.querySelector(selector);
   var previewBox = document.createElement('div');
   previewBox.classList.add('previewBox');
@@ -162,7 +163,7 @@ function upload(selector) {
 
     openButton.insertAdjacentElement('afterend', previewBox);
     previewBox.innerHTML = '';
-    var files = Array.from(event.target.files);
+    files = Array.from(event.target.files);
     console.log(Array.isArray(files));
     files.forEach(function (file) {
       if (!file.type.match('image')) return; // console.log(file);
@@ -172,15 +173,32 @@ function upload(selector) {
       reader.onload = function (ev) {
         console.log(ev); // previewBox.innerHTML += `<img src="${ev.target.result}" />`;
 
-        previewBox.insertAdjacentHTML('afterbegin', "\n<div class=\"preview-img\">\n<div class=\"preview-remove\">&times;</div>\n<img src=\"".concat(ev.target.result, "\" />\n<div class=\"preview-info\"><span>Size:</span> ").concat(bytesToSize(file.size), "</div>\n</div>")); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
+        previewBox.insertAdjacentHTML('afterbegin', "\n                            <div class=\"preview-img\">\n                            <div class=\"preview-remove\" data-name=\"".concat(file.name, "\">&times;</div>\n                            <img src=\"").concat(ev.target.result, "\" />\n                            <div class=\"preview-info\"><span>Size:</span> ").concat(bytesToSize(file.size), "</div>\n                            </div>")); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
       };
 
       reader.readAsDataURL(file);
     });
   };
 
+  var removeHandler = function removeHandler(event) {
+    if (!event.target.dataset.name) return;
+    var name = event.target.dataset.name;
+    files = files.filter(function (file) {
+      return file.name !== name;
+    });
+    var block = document.querySelector("[data-name=\"".concat(name, "\"]")).closest('.preview-img');
+    block.classList.add('preview-removing');
+    setTimeout(function () {
+      return block.remove();
+    }, 300);
+    console.log(block);
+    console.log(name);
+    console.log(files);
+  };
+
   openButton.addEventListener('click', triggerInput);
   input.addEventListener('change', changeHandler);
+  previewBox.addEventListener('click', removeHandler);
 }
 },{}],"app.js":[function(require,module,exports) {
 "use strict";
