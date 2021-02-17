@@ -17,10 +17,18 @@ const element =(tag, classes=[], content)=> {
    return node
 };
 
+function noop() {
+
+}
+
+
+
+
+
 
 export function upload(selector, options = {}) {
     let files = [];
-
+    const onUpload = options.onUpload ?? noop;
     const input = document.querySelector(selector);
     const previewBox = element('div', ['previewBox']);
 
@@ -113,8 +121,17 @@ export function upload(selector, options = {}) {
         console.log(files);
     };
 
-    const uploadHandler =(e)=> {
-      console.log(e.target.textContent)
+    const clearPreview =(el)=> {
+        el.style.bottom = 0;
+        el.innerHTML = '<div class="preview-progress"></div>'
+    }
+
+    const uploadHandler =()=> {
+        onUpload(files);
+        previewBox.querySelectorAll('.preview-remove').forEach(el=> el.remove());
+
+        previewBox.querySelectorAll('.preview-info').forEach(clearPreview)
+
     };
 
     openButton.addEventListener('click', triggerInput);
