@@ -125,6 +125,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.upload = upload;
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function bytesToSize(bytes) {
   var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   if (!bytes) return '0 Byte';
@@ -132,12 +144,22 @@ function bytesToSize(bytes) {
   return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
 }
 
+var element = function element(tag) {
+  var _node$classList;
+
+  var classes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var content = arguments.length > 2 ? arguments[2] : undefined;
+  var node = document.createElement(tag);
+  if (classes.length) (_node$classList = node.classList).add.apply(_node$classList, _toConsumableArray(classes));
+  if (content) node.textContent = content;
+  return node;
+};
+
 function upload(selector) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var files = [];
   var input = document.querySelector(selector);
-  var previewBox = document.createElement('div');
-  previewBox.classList.add('previewBox');
+  var previewBox = element('div', ['previewBox']);
 
   if (options.multi) {
     input.multiple = true; // input.setAttribute('multiple', true)
@@ -145,11 +167,12 @@ function upload(selector) {
 
   if (options.accept && Array.isArray(options.accept)) {
     input.setAttribute('accept', options.accept.join(', '));
-  }
+  } // const openButton = document.createElement('button');
+  // openButton.classList.add('btn');
+  // openButton.textContent = 'Open';
 
-  var openButton = document.createElement('button');
-  openButton.classList.add('btn');
-  openButton.textContent = 'Open';
+
+  var openButton = element('button', ['btn'], 'Open');
   input.insertAdjacentElement("afterend", openButton);
 
   var triggerInput = function triggerInput() {
@@ -173,7 +196,7 @@ function upload(selector) {
       reader.onload = function (ev) {
         console.log(ev); // previewBox.innerHTML += `<img src="${ev.target.result}" />`;
 
-        previewBox.insertAdjacentHTML('afterbegin', "\n                            <div class=\"preview-img\">\n                            <div class=\"preview-remove\" data-name=\"".concat(file.name, "\">&times;</div>\n                            <img src=\"").concat(ev.target.result, "\" />\n                            <div class=\"preview-info\"><span>Size:</span> ").concat(bytesToSize(file.size), "</div>\n                            </div>")); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
+        previewBox.insertAdjacentHTML('afterbegin', "\n                            <div class=\"preview-img\">\n                            <div class=\"preview-remove\" data-name=\"".concat(file.name, "\">&times;</div>\n                            <img src=\"").concat(ev.target.result, "\" alt=\"").concat(file.name, "\" />\n                            <div class=\"preview-info\"><span>Size:</span> ").concat(bytesToSize(file.size), "</div>\n                            </div>")); // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
       };
 
       reader.readAsDataURL(file);

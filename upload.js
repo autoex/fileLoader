@@ -6,12 +6,26 @@ function bytesToSize(bytes) {
 }
 
 
+const element =(tag, classes=[], content)=> {
+   const node = document.createElement(tag);
+
+    if(classes.length) node.classList.add(...classes);
+
+   if(content) node.textContent = content;
+
+
+   return node
+};
+
+
 export function upload(selector, options = {}) {
     let files = [];
 
     const input = document.querySelector(selector);
-    const previewBox = document.createElement('div');
-    previewBox.classList.add('previewBox');
+    const previewBox = element('div', ['previewBox']);
+
+
+
 
     if (options.multi) {
         input.multiple = true;
@@ -24,9 +38,12 @@ export function upload(selector, options = {}) {
 
     }
 
-    const openButton = document.createElement('button');
-    openButton.classList.add('btn');
-    openButton.textContent = 'Open';
+    // const openButton = document.createElement('button');
+    // openButton.classList.add('btn');
+    // openButton.textContent = 'Open';
+
+    const openButton = element('button', ['btn'], 'Open');
+
 
     input.insertAdjacentElement("afterend", openButton);
 
@@ -57,7 +74,7 @@ export function upload(selector, options = {}) {
                     previewBox.insertAdjacentHTML('afterbegin', `
                             <div class="preview-img">
                             <div class="preview-remove" data-name="${file.name}">&times;</div>
-                            <img src="${ev.target.result}" />
+                            <img src="${ev.target.result}" alt="${file.name}" />
                             <div class="preview-info"><span>Size:</span> ${bytesToSize(file.size)}</div>
                             </div>`)
                     // input.insertAdjacentHTML('afterend', `<img src="${ev.target.result}" />`)
@@ -80,17 +97,17 @@ export function upload(selector, options = {}) {
         let block = document.querySelector(`[data-name="${name}"]`).closest('.preview-img');
 
         block.classList.add('preview-removing');
-        setTimeout(()=>block.remove(), 300)
+        setTimeout(()=>block.remove(), 300);
 
 
-        console.log(block)
+        console.log(block);
 
 
 
 
         console.log(name);
         console.log(files);
-    }
+    };
 
     openButton.addEventListener('click', triggerInput);
 
