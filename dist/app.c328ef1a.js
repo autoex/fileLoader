@@ -167,13 +167,13 @@ function upload(selector) {
 
   if (options.accept && Array.isArray(options.accept)) {
     input.setAttribute('accept', options.accept.join(', '));
-  } // const openButton = document.createElement('button');
-  // openButton.classList.add('btn');
-  // openButton.textContent = 'Open';
-
+  }
 
   var openButton = element('button', ['btn'], 'Open');
+  var loadButton = element('button', ['btn', 'primary'], 'Load');
+  loadButton.style.display = 'none';
   input.insertAdjacentElement("afterend", openButton);
+  input.insertAdjacentElement("afterend", loadButton);
 
   var triggerInput = function triggerInput() {
     return input.click();
@@ -184,6 +184,7 @@ function upload(selector) {
       return;
     }
 
+    loadButton.style.display = '';
     openButton.insertAdjacentElement('afterend', previewBox);
     previewBox.innerHTML = '';
     files = Array.from(event.target.files);
@@ -209,6 +210,7 @@ function upload(selector) {
     files = files.filter(function (file) {
       return file.name !== name;
     });
+    if (!files.length) loadButton.style.display = 'none';
     var block = document.querySelector("[data-name=\"".concat(name, "\"]")).closest('.preview-img');
     block.classList.add('preview-removing');
     setTimeout(function () {
@@ -219,9 +221,14 @@ function upload(selector) {
     console.log(files);
   };
 
+  var uploadHandler = function uploadHandler(e) {
+    console.log(e.target.textContent);
+  };
+
   openButton.addEventListener('click', triggerInput);
   input.addEventListener('change', changeHandler);
   previewBox.addEventListener('click', removeHandler);
+  loadButton.addEventListener('click', uploadHandler);
 }
 },{}],"app.js":[function(require,module,exports) {
 "use strict";

@@ -38,14 +38,15 @@ export function upload(selector, options = {}) {
 
     }
 
-    // const openButton = document.createElement('button');
-    // openButton.classList.add('btn');
-    // openButton.textContent = 'Open';
+
 
     const openButton = element('button', ['btn'], 'Open');
+    const loadButton = element('button', ['btn', 'primary'], 'Load');
+    loadButton.style.display = 'none';
 
 
     input.insertAdjacentElement("afterend", openButton);
+    input.insertAdjacentElement("afterend", loadButton);
 
     const triggerInput = () => input.click();
     const changeHandler = event => {
@@ -53,6 +54,7 @@ export function upload(selector, options = {}) {
         if (!event.target.files) {
             return
         }
+        loadButton.style.display = '';
         openButton.insertAdjacentElement('afterend', previewBox);
         previewBox.innerHTML = '';
         files = Array.from(event.target.files);
@@ -90,7 +92,9 @@ export function upload(selector, options = {}) {
         if (!event.target.dataset.name) return;
 
         const {name} = event.target.dataset;
+
         files = files.filter(file => file.name !== name);
+        if(!files.length) loadButton.style.display = 'none';
 
 
 
@@ -109,11 +113,16 @@ export function upload(selector, options = {}) {
         console.log(files);
     };
 
+    const uploadHandler =(e)=> {
+      console.log(e.target.textContent)
+    };
+
     openButton.addEventListener('click', triggerInput);
 
     input.addEventListener('change', changeHandler);
 
-    previewBox.addEventListener('click', removeHandler)
+    previewBox.addEventListener('click', removeHandler);
+    loadButton.addEventListener('click', uploadHandler);
 
 
 }
